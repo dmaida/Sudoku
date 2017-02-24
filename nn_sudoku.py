@@ -20,7 +20,7 @@ def next_empty_cell(grid, i, j):
                 return x, y
 
     # Searches through entire grid looking for a 0
-    for x in range(0,n**2): 
+    for x in range(0,n**2):
         for y in range(0,n**2):
             if grid[x][y] == 0:
                 return x, y
@@ -78,18 +78,16 @@ def  input_conversion(input):
      The loop will go 0-n^2 if a dot meaning a blank space is in input a zero will be put in
     '''
     temp=[]
-    
-    for i in range( len(input)):
+
+    if input.isnumeric():
+        for i in range( len(input)):
 
 
-        if len(temp)<n**(2):
-            if input[i]=='.':
-                temp.append(0)
-            else:
+            if len(temp)<n**(2):
                 temp.append(int(input[i]))
-        if len(temp)==n**(2):
-            sudoku.append(temp)
-            temp=[]
+            if len(temp)==n**(2):
+                sudoku.append(temp)
+                temp=[]
 
     return sudoku
 
@@ -118,7 +116,7 @@ def pretty_print_puzzle(puzzle):
 
 
 if __name__ == "__main__":
-    grid = input_conversion('1.6..8....5....6.......5.724..6....9.6.....3.9....1..462.9.......8....2....5..3.1')
+    grid = input_conversion(u'106008000050000600000005072400600009060000030900001004620900000008000020000500301')
     print ("Initial Grid")
     pretty_print_puzzle(grid)
     start = int(round(time.time()*1000))
