@@ -112,14 +112,21 @@ def pretty_print_puzzle(puzzle):
         row_string=''
     print()
 
-
-
-
-if __name__ == "__main__":
-    grid = input_conversion(u'106008000050000600000005072400600009060000030900001004620900000008000020000500301')
+def main(argv):
+    grid = input_conversion(argv[1])
     print ("Initial Grid")
     pretty_print_puzzle(grid)
     start = int(round(time.time()*1000))
     backtracking_search(grid)
     finish = int(round(time.time()*1000))
+    with open("timeResults.txt", 'a') as file:
+        out = str(finish - start)+"\n"
+        file.write(out)
+    file.close()
     print("It took {} ms to solve".format(finish - start))
+
+
+
+
+if __name__ == "__main__":
+    main(sys.argv)
