@@ -2,6 +2,8 @@ import sys
 import os
 import math
 import time
+import random
+from main import *
 
 class Hillclimbing():
 
@@ -117,18 +119,43 @@ class Hillclimbing():
             unique = [] #reset the unique values for next col
 
         squareScore = self.evaluate_squares(grid)
-
-        print("squareScore", squareScore )
-        print("rowScore", rowScore)
-        print("colScore", colScore)
-
         totalScore = rowScore + colScore + squareScore
-
-        print(totalScore)
         return totalScore
+    def fill_empty_cells(self, grid):
+        new_tup = ()
+        for x in range(0, self.n**2):
+            for y in range(0, self.n**2):
+                tup = grid[x][y]
+                if tup[1]:
+                    new_tup = (random.randint(1, self.n**2), True)
+                    grid[x][y] = new_tup
 
-    def hillclimbing_search(self,grid, i = 0, j = 0):
-        return False
+    def hillclimbing_search(self,grid):
+        self.fill_empty_cells(grid)
+        flag = True
+
+        while flag:
+            flag = False
+
+        for i in range(0, self.n**2):
+            for j in range(0, self.n**2):
+                i = random.randint(0, self.n**2-1)
+                j = random.randint(0, self.n**2-1)
+                tup = grid[i][j]
+                for k in range(1, self.n**2):
+                    oldScore = self.evaluate_sudoku(grid)
+                    temp = grid[i][j]
+                    if tup[1]:
+                        grid[i][j] = (k, True)
+                    else: continue
+
+                    newScore = self.evaluate_sudoku(grid)
+                    if (oldScore > newScore):
+                        grid[i][j] = temp
+                    else:
+                        flag = True
+        print(self.evaluate_sudoku(grid))
+        return grid
 
 def  input_conversion(input):
 
@@ -146,21 +173,33 @@ def  input_conversion(input):
     if input.isnumeric():
         for i in range( len(input)):
             if len(temp)<n**(2):
-                temp.append(int(input[i]))
+                cell = int(input[i])
+                if cell != 0:
+                    tup =(cell, False)
+                else:
+                    tup =(cell, True)
+
+                temp.append(tup)
             if len(temp)==n**(2):
                 sudoku.append(temp)
                 temp=[]
+    print("Intitial Puzzle")
+    pretty_print_puzzle(sudoku, n)
     return (n, sudoku)
 
 def main(argv):
-    #tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
-    tup = input_conversion(u'5867291349423618')
+    tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
+    #tup = input_conversion(u'0807201349420618')
     #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
     grid = tup[1]
     n = tup[0]
 
     solver = Hillclimbing(n)
     solver.evaluate_sudoku(grid)
+    solved_sudoku = solver.hillclimbing_search(grid)
+
+    print("Solved Puzzle")
+    pretty_print_puzzle(solved_sudoku, n)
 
 
 
