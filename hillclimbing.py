@@ -44,6 +44,44 @@ class Hillclimbing():
             return False # when row and/or col is NOT valid
 
 
+    def evaluate_squares(self, grid):
+
+        """
+        Helper method that evaluates the score of
+        the inner square of the grid. Used to calculate
+        total score of Sudoku puzzle.
+        """
+        box = []
+        v = 0
+        w = 0
+        unique = []
+        squareScore = 0
+        while (True):
+            while (True):
+                i = v
+                j = w
+                init_x = i - i%self.n # find left side of nxn box
+                init_y = j - j%self.n # find upper side of nxn box
+                for x in range(init_x, init_x + self.n):
+                    for y in range(init_y, init_y + self.n):
+                        box.append(grid[x][y])
+                for value in box:
+                    if value not in unique:
+                        squareScore += 1
+                        unique.append(value)
+                    else: continue
+                unique = [] #reset unique values for next square
+                box = []    #reset for next sqaure
+                if (w +self.n < self.n**2):
+                    w += self.n
+                else:
+                    w = 0
+                    break
+            if (v +self.n < self.n**2):
+                v += self.n
+            else: break
+        return squareScore
+
     def evaluate_sudoku(self, grid):
 
         """
@@ -55,8 +93,6 @@ class Hillclimbing():
         The maximum score for a 9x9 puzzle is 243.
         Meaning that there is a unique value in every row, col,
         and inner square.
-
-        IN PROGRESS: Still need to score inner squares.
         """
         unique = []
         rowScore = 0
@@ -79,11 +115,17 @@ class Hillclimbing():
                     unique.append(value)
                 else: continue
             unique = [] #reset the unique values for next col
-        totalScore = rowScore + colScore
+
+        squareScore = self.evaluate_squares(grid)
+
+        print("squareScore", squareScore )
+        print("rowScore", rowScore)
+        print("colScore", colScore)
+
+        totalScore = rowScore + colScore + squareScore
 
         print(totalScore)
         return totalScore
-
 
     def hillclimbing_search(self,grid, i = 0, j = 0):
         return False
@@ -111,12 +153,15 @@ def  input_conversion(input):
     return (n, sudoku)
 
 def main(argv):
-    tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
+    #tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
+    tup = input_conversion(u'5867291349423618')
+    #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
     grid = tup[1]
     n = tup[0]
 
     solver = Hillclimbing(n)
     solver.evaluate_sudoku(grid)
+
 
 
 if __name__ == "__main__":
