@@ -1,16 +1,12 @@
 import sys
 import os
 import math
-import numpy
 import time
 
 n = -1 # gonna be passing n around like a joint. Should probably be a global
 
-
 def next_empty_cell(grid, i, j):
-
     count = 0
-
     # Searches through grid starting at i, j
     # These nested for loops aren't required
     # but cuts time by A LOT
@@ -32,10 +28,8 @@ def is_valid(grid, i, j, digit):
     valid_row = all([digit != grid[i][x] for x in range(n**2)]) # magic code that checks entire row for digit
     valid_col = all([digit != grid[x][j] for x in range(n**2)]) # magic code that checks entire col for digit
     if (valid_row and valid_col):
-
         init_x = i - i%n # find left side of nxn box
         init_y = j - j%n # find upper side of nxn box
-
         for x in range(init_x, init_x + n):
             for y in range(init_y, init_y + n): # check the nxn box for repeats
                 if grid[x][y] == digit: # if repeat was found
@@ -45,7 +39,6 @@ def is_valid(grid, i, j, digit):
         return False # when row and/or col is NOT valid
 
 def backtracking_search(grid, i = 0, j = 0):
-
     i, j = next_empty_cell(grid, i, j)
     if (i == -1):
         print("Found Solution")
@@ -72,25 +65,18 @@ def  input_conversion(input):
     else:
         n = int(n)
     sudoku=[]
-
-
     '''Two for loops
      The loop will go 0-n^2 if a dot meaning a blank space is in input a zero will be put in
     '''
     temp=[]
-
     if input.isnumeric():
         for i in range( len(input)):
-
-
             if len(temp)<n**(2):
                 temp.append(int(input[i]))
             if len(temp)==n**(2):
                 sudoku.append(temp)
                 temp=[]
-
     return sudoku
-
 
 def pretty_print_puzzle(puzzle):
     global n
@@ -112,21 +98,39 @@ def pretty_print_puzzle(puzzle):
         row_string=''
     print()
 
-def main(argv):
-    grid = input_conversion(argv[1])
+if __name__ == "__main__":
+    grid = input_conversion(u'106008000050000600000005072400600009060000030900001004620900000008000020000500301')
     print ("Initial Grid")
     pretty_print_puzzle(grid)
     start = int(round(time.time()*1000))
     backtracking_search(grid)
     finish = int(round(time.time()*1000))
-    with open("timeResults.txt", 'a') as file:
-        out = str(finish - start)+"\n"
-        file.write(out)
-    file.close()
     print("It took {} ms to solve".format(finish - start))
 
 
+"""
+Stochastic Hill Climbing
+
+X = Fill the empty cells randomly
+flag = true
+while flag is true
+    flag = false
+    for i=0 to 8
+        for j= 0 to 8
+        i= random btw 0 to 8
+        j= random btw 0 to 8
+        for k = 1 to 9
+            oldScore = evaluate(X)
+            temp = X[i][j]
+            X[i][j] = k
+            newScore = evaluate(X)
+            if oldScore > newScore
+                X[i][j] = temp
+            else
+                flag = true
+        end second for
+    end first for
+end while
 
 
-if __name__ == "__main__":
-    main(sys.argv)
+"""
