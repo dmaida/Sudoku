@@ -3,6 +3,7 @@ import os
 import math
 import time
 from backtracking import *
+from hillclimbing import *
 
 
 def  input_conversion(input):
@@ -54,11 +55,10 @@ def pretty_print_puzzle(puzzle,n):
 
 def main(argv):
     tup = input_conversion(argv[1])
-    print(tup)
     grid = tup[1]
     n = tup[0]
-    print ("Initial Grid")
     pretty_print_puzzle(grid, n)
+    print ("Initial Grid")
     solver = Backtracking(n)
     start = int(round(time.time()*1000))
     solver.backtracking_search(grid)
