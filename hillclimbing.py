@@ -68,9 +68,9 @@ class Hillclimbing():
                     for y in range(init_y, init_y + self.n):
                         box.append(grid[x][y])
                 for value in box:
-                    if value not in unique:
+                    if value[0] not in unique:
                         squareScore += 1
-                        unique.append(value)
+                        unique.append(value[0])
                     else: continue
                 unique = [] #reset unique values for next square
                 box = []    #reset for next sqaure
@@ -103,18 +103,18 @@ class Hillclimbing():
         for i in range(0, self.n**2): #for every row in Grid
             valid_row = [grid[i][x] for x in range(self.n**2)]
             for value in valid_row:
-                if value not in unique:
+                if value[0] not in unique:
                     rowScore += 1
-                    unique.append(value)
+                    unique.append(value[0])
                 else: continue
             unique = [] # reset the unique values for next row
 
         for j in range(0, self.n**2):  # for every col in Grid
             valid_col = [grid[x][j] for x in range(self.n**2)]
             for value in valid_col:
-                if value not in unique:
+                if value[0] not in unique:
                     colScore += 1
-                    unique.append(value)
+                    unique.append(value[0])
                 else: continue
             unique = [] #reset the unique values for next col
 
@@ -137,23 +137,27 @@ class Hillclimbing():
         while flag:
             flag = False
 
-        for i in range(0, self.n**2):
-            for j in range(0, self.n**2):
-                i = random.randint(0, self.n**2-1)
-                j = random.randint(0, self.n**2-1)
-                tup = grid[i][j]
-                for k in range(1, self.n**2):
-                    oldScore = self.evaluate_sudoku(grid)
-                    temp = grid[i][j]
-                    if tup[1]:
-                        grid[i][j] = (k, True)
-                    else: continue
+            for i in range(0, self.n**2):
+                for j in range(0, self.n**2):
+                    i = random.randint(0, self.n**2-1)
+                    j = random.randint(0, self.n**2-1)
+                    tup = grid[i][j]
+                    for k in range(1, self.n**2+1):
+                        oldScore = self.evaluate_sudoku(grid)
+                        temp = grid[i][j]
+                        if tup[1]:
+                            #print(grid[i][j], k)
+                            grid[i][j] = (k, True)
+                        else: break
+                        newScore = self.evaluate_sudoku(grid)
+                        if (oldScore > newScore):
+                            grid[i][j] = temp
+                        else:
+                            flag = True
+            print(self.evaluate_sudoku(grid))
+            pretty_print_puzzle(grid, self.n)
 
-                    newScore = self.evaluate_sudoku(grid)
-                    if (oldScore > newScore):
-                        grid[i][j] = temp
-                    else:
-                        flag = True
+
         print(self.evaluate_sudoku(grid))
         return grid
 
@@ -188,7 +192,8 @@ def  input_conversion(input):
     return (n, sudoku)
 
 def main(argv):
-    tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
+    #tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
+    tup = input_conversion(u'000000000000000000000000000000000000000000000000000000000000000000000000000000000')
     #tup = input_conversion(u'0807201349420618')
     #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
     grid = tup[1]
