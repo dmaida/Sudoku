@@ -2,6 +2,7 @@ import sys
 import os
 import math
 import time
+from main import *
 
 class Backtracking():
 
@@ -47,8 +48,8 @@ class Backtracking():
 
         i, j = self.next_empty_cell(grid, i, j)
         if (i == -1):
-            #print("Found Solution")
-            #pretty_print_puzzle(grid)
+            print("Found Solution")
+            pretty_print_puzzle(grid, self.n)
             return True
 
         r = range(1, (self.n**2)+1)

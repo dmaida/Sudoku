@@ -45,6 +45,65 @@ class Hillclimbing():
         else:
             return False # when row and/or col is NOT valid
 
+    def  is_solved(self, grid):
+
+        """
+        Helper method that evaluates the score of
+        the inner square of the grid. Used to calculate
+        total score of Sudoku puzzle.
+        """
+        unique = []
+        rowScore = 0
+        colScore = 0
+        totalScore = 0
+        for i in range(0, self.n**2): #for every row in Grid
+            valid_row = [grid[i][x] for x in range(self.n**2)]
+            for value in valid_row:
+                if value[0] not in unique:
+                    rowScore += 1
+                    unique.append(value[0])
+                else: return False
+            unique = [] # reset the unique values for next row
+
+        for j in range(0, self.n**2):  # for every col in Grid
+            valid_col = [grid[x][j] for x in range(self.n**2)]
+            for value in valid_col:
+                if value[0] not in unique:
+                    colScore += 1
+                    unique.append(value[0])
+                else: return False
+            unique = [] #reset the unique values for next col
+
+        box = []
+        v = 0
+        w = 0
+        unique = []
+        squareScore = 0
+        while (True):
+            while (True):
+                i = v
+                j = w
+                init_x = i - i%self.n # find left side of nxn box
+                init_y = j - j%self.n # find upper side of nxn box
+                for x in range(init_x, init_x + self.n):
+                    for y in range(init_y, init_y + self.n):
+                        box.append(grid[x][y])
+                for value in box:
+                    if value[0] not in unique:
+                        squareScore += 1
+                        unique.append(value[0])
+                    else: return False
+                unique = [] #reset unique values for next square
+                box = []    #reset for next square
+                if (w +self.n < self.n**2):
+                    w += self.n
+                else:
+                    w = 0
+                    break
+            if (v +self.n < self.n**2):
+                v += self.n
+            else: break
+        return squareScore
 
     def evaluate_squares(self, grid):
 
@@ -53,6 +112,7 @@ class Hillclimbing():
         the inner square of the grid. Used to calculate
         total score of Sudoku puzzle.
         """
+
         box = []
         v = 0
         w = 0
@@ -73,7 +133,7 @@ class Hillclimbing():
                         unique.append(value[0])
                     else: continue
                 unique = [] #reset unique values for next square
-                box = []    #reset for next sqaure
+                box = []    #reset for next square
                 if (w +self.n < self.n**2):
                     w += self.n
                 else:
@@ -121,42 +181,49 @@ class Hillclimbing():
         squareScore = self.evaluate_squares(grid)
         totalScore = rowScore + colScore + squareScore
         return totalScore
+
     def fill_empty_cells(self, grid):
-        new_tup = ()
+        for x in range(0, self.n**2):
+            for y in range(0, self.n**2):
+                tup = grid[x][y]
+                if (tup[0] == 0):
+                    grid[x][y] = (random.randint(1, self.n**2), True)
+
+    def reset_puzzle(self, grid):
         for x in range(0, self.n**2):
             for y in range(0, self.n**2):
                 tup = grid[x][y]
                 if tup[1]:
-                    new_tup = (random.randint(1, self.n**2), True)
-                    grid[x][y] = new_tup
+                    grid[x][y] = (random.randint(1, self.n**2), True)
+
 
     def hillclimbing_search(self,grid):
         self.fill_empty_cells(grid)
         flag = True
-
         while flag:
             flag = False
-
+            if self.is_solved(grid):
+                break
             for i in range(0, self.n**2):
                 for j in range(0, self.n**2):
                     i = random.randint(0, self.n**2-1)
                     j = random.randint(0, self.n**2-1)
-                    tup = grid[i][j]
                     for k in range(1, self.n**2+1):
                         oldScore = self.evaluate_sudoku(grid)
                         temp = grid[i][j]
-                        if tup[1]:
-                            #print(grid[i][j], k)
+                        if temp[1]:
                             grid[i][j] = (k, True)
-                        else: break
                         newScore = self.evaluate_sudoku(grid)
                         if (oldScore > newScore):
                             grid[i][j] = temp
+                        elif(newScore == oldScore):
+                            if (self.is_solved(grid)==False):
+                                self.reset_puzzle(grid)
+                            flag = True
                         else:
                             flag = True
-            print(self.evaluate_sudoku(grid))
-            pretty_print_puzzle(grid, self.n)
-
+            #print(self.evaluate_sudoku(grid))
+            #pretty_print_puzzle(grid, self.n)
 
         print(self.evaluate_sudoku(grid))
         return grid
@@ -193,18 +260,20 @@ def  input_conversion(input):
 
 def main(argv):
     #tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
-    tup = input_conversion(u'000000000000000000000000000000000000000000000000000000000000000000000000000000000')
-    #tup = input_conversion(u'0807201349420618')
+    #tup = input_conversion(u'100000000000000000000000000000000000000000000000000000000000000000000000000000000')
+    tup = input_conversion(u'0402020003012143')
+
     #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
     grid = tup[1]
     n = tup[0]
 
     solver = Hillclimbing(n)
-    solver.evaluate_sudoku(grid)
+    #print(solver.evaluate_sudoku(grid))
+
     solved_sudoku = solver.hillclimbing_search(grid)
 
     print("Solved Puzzle")
-    pretty_print_puzzle(solved_sudoku, n)
+    #pretty_print_puzzle(solved_sudoku, n)
 
 
 
