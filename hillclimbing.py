@@ -30,8 +30,8 @@ class Hillclimbing():
         return -1, -1
 
     def is_valid(self,grid, i, j, digit):
-        valid_row = all([digit != grid[i][x] for x in range(self.n**2)]) # magic code that checks entire row for digit
-        valid_col = all([digit != grid[x][j] for x in range(self.n**2)]) # magic code that checks entire col for digit
+        valid_row = all([digit != grid[i][x][0] for x in range(self.n**2)]) # magic code that checks entire row for digit
+        valid_col = all([digit != grid[x][j][0] for x in range(self.n**2)]) # magic code that checks entire col for digit
         if (valid_row and valid_col):
 
             init_x = i - i%self.n # find left side of nxn box
@@ -39,7 +39,7 @@ class Hillclimbing():
 
             for x in range(init_x, init_x + self.n):
                 for y in range(init_y, init_y + self.n): # check the nxn box for repeats
-                    if grid[x][y] == digit: # if repeat was found
+                    if grid[x][y][0] == digit: # if repeat was found
                         return False # return invalid
             return True # when row/col are valid and box did not find repeat
         else:
@@ -194,14 +194,39 @@ class Hillclimbing():
             for y in range(0, self.n**2):
                 tup = grid[x][y]
                 if tup[1]:
-                    grid[x][y] = (random.randint(1, self.n**2), True)
+                    while True:
+                        for k in range(1, self.n**2+1):
+                            r = random.randint(1, self.n**2+1)
+                            if (self.is_valid(grid, x,y,r)):
+                                grid[x][y] = (r, True)
+                                break
+                            else:
+                                break
+                        break
 
+    def random_swap(self, grid):
+        for x in range(0, self.n**2):
+            for y in range(0, self.n**2):
+                tup = grid[x][y]
+                if tup[1]:
+                    if (self.is_valid(grid, x,y,grid[x][y][0]) == False):
+                        print("invalid")
+                        print(grid[x][y])
+                        return True
+    def reset(self, grid):
+        for x in range(0, self.n**2):
+            for y in range(0, self.n**2):
+                tup = grid[x][y]
+                if tup[1]:
+                    grid[x][y] = (0, True)
 
     def hillclimbing_search(self,grid):
-        self.fill_empty_cells(grid)
+        self.reset_puzzle(grid)
         flag = True
         while flag:
+
             flag = False
+            randomNumb = random.randint(0, 100)
             if self.is_solved(grid):
                 break
             for i in range(0, self.n**2):
@@ -212,18 +237,23 @@ class Hillclimbing():
                         oldScore = self.evaluate_sudoku(grid)
                         temp = grid[i][j]
                         if temp[1]:
-                            grid[i][j] = (k, True)
+                            if (self.is_valid(grid, i,j,k)):
+                                grid[i][j] = (k, True)
                         newScore = self.evaluate_sudoku(grid)
-                        if (oldScore > newScore):
+                        if (oldScore> newScore):
                             grid[i][j] = temp
-                        elif(newScore == oldScore):
+                        elif(45 <= randomNumb <= 50):
                             if (self.is_solved(grid)==False):
                                 self.reset_puzzle(grid)
                             flag = True
+                        elif(newScore == oldScore):
+                            if (self.is_solved(grid)==False):
+                                self.reset_puzzle(grid)
+                                flag = True
                         else:
                             flag = True
-            #print(self.evaluate_sudoku(grid))
-            #pretty_print_puzzle(grid, self.n)
+            print(self.evaluate_sudoku(grid))
+            pretty_print_puzzle(grid, self.n)
 
         print(self.evaluate_sudoku(grid))
         return grid
@@ -259,9 +289,9 @@ def  input_conversion(input):
     return (n, sudoku)
 
 def main(argv):
-    #tup = input_conversion(u'004060000070000050000391007009000300102040709003000500800629000020000010000030800')
-    #tup = input_conversion(u'100000000000000000000000000000000000000000000000000000000000000000000000000000000')
-    tup = input_conversion(u'0402020003012143')
+    tup = input_conversion(u'002050608030600059000000030070002000809000207000400010010000000420003070908040300')
+    #tup = input_conversion(u'002050608030600059000000030070002000809000207000400010010000000420000000000000000')
+    #tup = input_conversion(u'0300004000100000')
 
     #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
     grid = tup[1]
@@ -273,7 +303,7 @@ def main(argv):
     solved_sudoku = solver.hillclimbing_search(grid)
 
     print("Solved Puzzle")
-    #pretty_print_puzzle(solved_sudoku, n)
+    pretty_print_puzzle(solved_sudoku, n)
 
 
 
