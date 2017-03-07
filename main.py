@@ -42,10 +42,17 @@ def pretty_print_puzzle(puzzle,n):
         row_string='|'
         row_number+=1
         for spot in range(len(row)):
-            if spot%n==0 and spot !=0:
-                row_string=row_string+'  |  '+str(row[spot])
+            #An if statment due to the fact that input conversion in hillclimbing makes the spot a tuple instead of just an int.
+            if type(row[spot])  ==tuple:
+                if spot%n==0 and spot !=0:
+                    row_string=row_string+'  |  '+str(row[spot][0])
+                else:
+                    row_string=row_string+'  '+str(row[spot][0])
             else:
-                row_string=row_string+'  '+str(row[spot])
+                if spot%n==0 and spot !=0:
+                    row_string=row_string+'  |  '+str(row[spot])
+                else:
+                    row_string=row_string+'  '+str(row[spot])
         print(row_string+'  |')
         if row_number%n==0 and row_number!= len(puzzle):
             print()
