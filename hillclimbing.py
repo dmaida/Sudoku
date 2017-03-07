@@ -196,7 +196,7 @@ class Hillclimbing():
                 if tup[1]:
                     while True:
                         for k in range(1, self.n**2+1):
-                            r = random.randint(1, self.n**2+1)
+                            r = random.randint(1, self.n**2)
                             if (self.is_valid(grid, x,y,r)):
                                 grid[x][y] = (r, True)
                                 break
@@ -244,7 +244,7 @@ class Hillclimbing():
                             grid[i][j] = temp
                         elif(45 <= randomNumb <= 50):
                             if (self.is_solved(grid)==False):
-                                self.reset_puzzle(grid)
+                                self.reset(grid)
                             flag = True
                         elif(newScore == oldScore):
                             if (self.is_solved(grid)==False):
@@ -289,7 +289,7 @@ def  input_conversion(input):
     return (n, sudoku)
 
 def main(argv):
-    tup = input_conversion(u'002050608030600059000000030070002000809000207000400010010000000420003070908040300')
+    tup = input_conversion(u'000000608030600059000000030000000000800000200000000010000000000420003070908040300')
     #tup = input_conversion(u'002050608030600059000000030070002000809000207000400010010000000420000000000000000')
     #tup = input_conversion(u'0300004000100000')
 
