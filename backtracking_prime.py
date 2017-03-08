@@ -3,23 +3,24 @@ import os
 import math
 import time
 
-
 class backtracking_prime():
 
     def __init__(self, puzzle, n):
         self.n = n
         self.grid = {}
-        for i in range(n*n):
+        self.puzzle = puzzle
+
+    def solve_puzzle(self):
+        for i in range(self.n*self.n):
             self.grid[i] = {}
-            for j in range(n*n):
-                if puzzle[i][j][1]:
+            for j in range(self.n*self.n):
+                if self.puzzle[i][j]:
                     move = []
-                    move.append(puzzle[i][j][0])
+                    move.append(self.puzzle[i][j])
                     self.grid[i][j] = move
                 else:
                     moves = list(range(1, self.n * self.n + 1))
                     self.grid[i][j] = moves
-
         self.reduce_domain()
         self.backtrack()
 
@@ -40,8 +41,6 @@ class backtracking_prime():
                     return False # return invalid
         return True # when row/col are valid and box did not find repeat
 
-
-
     def reduce_domain(self):
         repeat = True
         while repeat:
@@ -60,7 +59,6 @@ class backtracking_prime():
                                 pencil_list.remove(num)
                                 repeat = True
 
-    
     def next_cell(self, i, j):
         for x in range(i, (self.n**2)):
             #print("X: ",x)
@@ -82,8 +80,6 @@ class backtracking_prime():
 
         return -1, -1
 
-
-
     def backtrack(self, i = 0, j = 0):
         grid = self.grid
         i, j = self.next_cell(i, j)
@@ -102,13 +98,6 @@ class backtracking_prime():
                     return True
                 grid[i][j] = r
         return False
-
-    def solve_puzzle(puzzle, n):
-
-        pass
-
-
-
 
 def  input_conversion(input):
 
@@ -137,7 +126,7 @@ def  input_conversion(input):
                 sudoku.append(temp)
                 temp=[]
     print("Intitial Puzzle")
-    #pretty_print_puzzle(sudoku, n)
+    pretty_print_puzzle(sudoku, n)
     return (n, sudoku)
 
 def print_puzzle(puzzle,n):
@@ -164,5 +153,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

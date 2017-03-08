@@ -2,12 +2,13 @@ import sys
 import os
 import math
 import time
-from main import *
+
 
 class Backtracking():
 
     def __init__(self, n):
         self.n=n
+        self.grid = []
 
     def next_empty_cell(self,grid, i, j):
         count = 0
@@ -49,7 +50,7 @@ class Backtracking():
         i, j = self.next_empty_cell(grid, i, j)
         if (i == -1):
             print("Found Solution")
-            pretty_print_puzzle(grid, self.n)
+            self.grid = grid
             return True
 
         r = range(1, (self.n**2)+1)

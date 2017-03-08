@@ -3,7 +3,7 @@ import os
 import math
 import time
 import random
-from main import *
+
 
 class Hillclimbing():
 
@@ -287,52 +287,3 @@ def  input_conversion(input):
     print("Intitial Puzzle")
     pretty_print_puzzle(sudoku, n)
     return (n, sudoku)
-
-def main(argv):
-    tup = input_conversion(u'000000608030600059000000030000000000800000200000000010000000000420003070908040300')
-    #tup = input_conversion(u'002050608030600059000000030070002000809000207000400010010000000420000000000000000')
-    #tup = input_conversion(u'0300004000100000')
-
-    #Solved Sudoku puzzle... Evaluation function returns maximum score of 243
-    grid = tup[1]
-    n = tup[0]
-
-    solver = Hillclimbing(n)
-    #print(solver.evaluate_sudoku(grid))
-
-    solved_sudoku = solver.hillclimbing_search(grid)
-
-    print("Solved Puzzle")
-    pretty_print_puzzle(solved_sudoku, n)
-
-
-
-if __name__ == "__main__":
-    main(sys.argv)
-
-"""
-Stochastic Hill Climbing
-
-X = Fill the empty cells randomly
-flag = true
-while flag is true
-    flag = false
-    for i=0 to 8
-        for j= 0 to 8
-        i= random btw 0 to 8
-        j= random btw 0 to 8
-        for k = 1 to 9
-            oldScore = evaluate(X)
-            temp = X[i][j]
-            X[i][j] = k
-            newScore = evaluate(X)
-            if oldScore > newScore
-                X[i][j] = temp
-            else
-                flag = true
-        end second for
-    end first for
-end while
-
-
-"""

@@ -4,6 +4,7 @@ import math
 import time
 from backtracking import *
 from hillclimbing import *
+from backtracking_prime import *
 
 
 def  input_conversion(input):
@@ -61,21 +62,36 @@ def pretty_print_puzzle(puzzle,n):
     print()
 
 def main(argv):
-    tup = input_conversion(argv[1])
+    my_input = str(argv[2])
+    tup = input_conversion(my_input)
     grid = tup[1]
     n = tup[0]
-    pretty_print_puzzle(grid, n)
-    print ("Initial Grid")
-    solver = Backtracking(n)
+
+    #print ("Initial Grid")
+    #pretty_print_puzzle(grid, n)
+
     start = int(round(time.time()*1000))
-    solver.backtracking_search(grid)
-    finish = int(round(time.time()*1000))
+    if ('backtracking' in argv):
+        solver = Backtracking(n)
+        start = int(round(time.time()*1000))
+        solver.backtracking_search(grid)
+        finish = int(round(time.time()*1000))
+
+    elif('hillclimbing' in argv):
+        #solver = Hillclimbing(n)
+        pass
+
+    elif('backtracking_prime' in argv):
+        solver = backtracking_prime(grid, n)
+        start = int(round(time.time()*1000))
+        solver.solve_puzzle()
+        finish = int(round(time.time()*1000))
+
     with open("timeResults.txt", 'a') as file:
         out = str(finish - start)+"\n"
         file.write(out)
     file.close()
     print("It took {} ms to solve".format(finish - start))
-
 
 if __name__ == "__main__":
     main(sys.argv)
