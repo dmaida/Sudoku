@@ -19,12 +19,7 @@ class Backtracking():
             for y in range(j, (self.n**2)):
                 if grid[x][y] == 0:
                     return x, y
-
-        # Searches through entire grid looking for a 0
-        for x in range(0,self.n**2):
-            for y in range(0,self.n**2):
-                if grid[x][y] == 0:
-                    return x, y
+            j = 0
 
         # Could not find a 0. Solution found
         return -1, -1

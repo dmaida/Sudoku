@@ -62,7 +62,9 @@ def pretty_print_puzzle(puzzle,n):
     print()
 
 def main(argv):
-    my_input = str(argv[2])
+    my_input = ''
+    if len(argv) >2 :
+        my_input = str(argv[2])
     tup = input_conversion(my_input)
     grid = tup[1]
     n = tup[0]
@@ -78,14 +80,20 @@ def main(argv):
         finish = int(round(time.time()*1000))
 
     elif('hillclimbing' in argv):
-        #solver = Hillclimbing(n)
-        pass
+        solver = Hillclimbing(n)
+        start = int(round(time.time()*1000))
+        puzzle = solver.conversion(my_input)
+        solver.hillclimbing_search(puzzle)
+        finish = int(round(time.time()*1000))
 
     elif('backtracking_prime' in argv):
         solver = backtracking_prime(grid, n)
         start = int(round(time.time()*1000))
         solver.solve_puzzle()
         finish = int(round(time.time()*1000))
+    else:
+        print("Invalid input to program.")
+        sys.exit()
 
     with open("timeResults.txt", 'a') as file:
         out = str(finish - start)+"\n"

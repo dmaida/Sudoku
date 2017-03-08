@@ -73,11 +73,6 @@ class backtracking_prime():
                     return x, y
             j = 0
 
-        for x in range(0, self.n**2):
-            for y in range(0, self.n**2):
-                if (len(pencil_list) > 1):
-                    return x, y
-
         return -1, -1
 
     def backtrack(self, i = 0, j = 0):
