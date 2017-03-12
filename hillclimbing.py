@@ -5,8 +5,9 @@ import time
 import random
 class Hillclimbing():
     def __init__(self, n):
-        self.n=n
-        
+        self.n= n
+        self.OPTIMAL_SCORE= 243
+
     def is_valid(self,grid, i, j, digit):
         valid_row = all([digit != grid[i][x][0] for x in range(self.n**2)]) # magic code that checks entire row for digit
         valid_col = all([digit != grid[x][j][0] for x in range(self.n**2)]) # magic code that checks entire col for digit
@@ -34,16 +35,18 @@ class Hillclimbing():
             valid_row = [grid[i][x] for x in range(self.n**2)]
             for value in valid_row:
                 if value[0] not in unique:
-                    rowScore += 1
-                    unique.append(value[0])
+                    if value[0] != 0:
+                        rowScore += 1
+                        unique.append(value[0])
                 else: return False
             unique = [] # reset the unique values for next row
         for j in range(0, self.n**2):  # for every col in Grid
             valid_col = [grid[x][j] for x in range(self.n**2)]
             for value in valid_col:
                 if value[0] not in unique:
-                    colScore += 1
-                    unique.append(value[0])
+                    if value[0] != 0:
+                        colScore += 1
+                        unique.append(value[0])
                 else: return False
             unique = [] #reset the unique values for next col
         box = []
@@ -62,8 +65,9 @@ class Hillclimbing():
                         box.append(grid[x][y])
                 for value in box:
                     if value[0] not in unique:
-                        squareScore += 1
-                        unique.append(value[0])
+                        if value[0] != 0:
+                            squareScore += 1
+                            unique.append(value[0])
                     else: return False
                 unique = [] #reset unique values for next square
                 box = []    #reset for next square
@@ -75,7 +79,12 @@ class Hillclimbing():
             if (v +self.n < self.n**2):
                 v += self.n
             else: break
-        return squareScore
+
+        total_score=squareScore+colScore+rowScore
+        if total_score==self.OPTIMAL_SCORE:
+            return True
+        else:
+            return False
     def evaluate_squares(self, grid):
         """
         Helper method that evaluates the score of
@@ -98,8 +107,9 @@ class Hillclimbing():
                         box.append(grid[x][y])
                 for value in box:
                     if value[0] not in unique:
-                        squareScore += 1
-                        unique.append(value[0])
+                        if value[0] != 0:
+                            squareScore += 1
+                            unique.append(value[0])
                     else: continue
                 unique = [] #reset unique values for next square
                 box = []    #reset for next square
@@ -112,6 +122,8 @@ class Hillclimbing():
                 v += self.n
             else: break
         return squareScore
+
+
     def evaluate_sudoku(self, grid):
         """
         This functions runs through the Sudoku grid
@@ -130,27 +142,33 @@ class Hillclimbing():
             valid_row = [grid[i][x] for x in range(self.n**2)]
             for value in valid_row:
                 if value[0] not in unique:
-                    rowScore += 1
-                    unique.append(value[0])
+                    if value[0] != 0:
+                        rowScore += 1
+                        unique.append(value[0])
                 else: continue
             unique = [] # reset the unique values for next row
         for j in range(0, self.n**2):  # for every col in Grid
             valid_col = [grid[x][j] for x in range(self.n**2)]
             for value in valid_col:
                 if value[0] not in unique:
-                    colScore += 1
-                    unique.append(value[0])
+                    if value[0] != 0:
+                        colScore += 1
+                        unique.append(value[0])
                 else: continue
             unique = [] #reset the unique values for next col
         squareScore = self.evaluate_squares(grid)
         totalScore = rowScore + colScore + squareScore
         return totalScore
+
+
     def fill_empty_cells(self, grid):
         for x in range(0, self.n**2):
             for y in range(0, self.n**2):
                 tup = grid[x][y]
                 if (tup[0] == 0):
                     grid[x][y] = (random.randint(1, self.n**2), True)
+
+
     def reset_puzzle(self, grid):
         for x in range(0, self.n**2):
             for y in range(0, self.n**2):
@@ -165,6 +183,8 @@ class Hillclimbing():
                             else:
                                 break
                         break
+
+
     def random_swap(self, grid):
         for x in range(0, self.n**2):
             for y in range(0, self.n**2):
@@ -174,12 +194,14 @@ class Hillclimbing():
                         print("invalid")
                         print(grid[x][y])
                         return True
+
     def reset(self, grid):
         for x in range(0, self.n**2):
             for y in range(0, self.n**2):
                 tup = grid[x][y]
                 if tup[1]:
                     grid[x][y] = (0, True)
+
     def hillclimbing_search(self,grid):
         self.reset_puzzle(grid)
         flag = True

@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 import sys
 import os
 import math
@@ -35,7 +36,7 @@ def  input_conversion(input):
     return (n, sudoku)
 
 
-def pretty_print_puzzle(puzzle,n):
+def pretty_print_puzzle(puzzle, n):
 
     row_number=0
     print()
@@ -93,6 +94,10 @@ def main(argv):
         finish = int(round(time.time()*1000))
     else:
         print("Invalid input to program.")
+        print("Please rerun the program with the following format of input:")
+        print("./main.py <method> <puzzle>\n"
+             +"The following are valid <method> inputs: \n"
+             +"     backtracking\n     backtracking_prime\n     hillclimbing")
         sys.exit()
 
     with open("timeResults.txt", 'a') as file:
