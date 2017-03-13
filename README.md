@@ -18,12 +18,17 @@ We implemented three distint methods for extra credit.
 
 In a Unix Enviroment such as Linux or Mac OS X.
 
-$python3 main.y <method> <puzzle>
+$python3 main.y method puzzle
 
 method options:
 	backtracking
 	backtracking_prime 
 	hillclimbing
+	
+puzzle options:
+    Sudoko puzzle string such as this. 
+    
+    000030009048900000200470100125000080000080710000500000000090054061000003000050070
 
 ### Archive:
 backtracking_prime.py 
