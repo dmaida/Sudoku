@@ -95,7 +95,7 @@ def main(argv):
     else:
         print("Invalid input to program.")
         print("Please rerun the program with the following format of input:")
-        print("./main.py <method> <puzzle>\n"
+        print("python3 main.py <method> <puzzle>\n"
              +"The following are valid <method> inputs: \n"
              +"     backtracking\n     backtracking_prime\n     hillclimbing")
         sys.exit()
